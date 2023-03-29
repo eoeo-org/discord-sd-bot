@@ -106,7 +106,7 @@ module.exports = {
       fs.promises.writeFile("SPOILER_out.png", base64str, {encoding: "base64"});
       interaction.editReply({ content: "生成完了！\n```" + 
       "Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
-      "Negative: " + interaction.options.getString("negative_prompt") + "\n" +
+      "Negative: " + NegativePrompt + "\n" +
       "Model: " + interaction.options.getString("models") + "\n" +
       "Resolution: " + interaction.options.getString("resolution") + "\n" +
       "```", files: ['SPOILER_out.png']});
