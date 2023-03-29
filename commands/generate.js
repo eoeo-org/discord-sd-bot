@@ -21,7 +21,7 @@ module.exports = {
       },
       body: JSON.stringify({
         "prompt": interaction.options.getString("prompt"),
-        "negative_prompt": "(worst quality, low quality:1.4), nsfw",
+        "negative_prompt": "(worst quality, low quality:1.4), nsfw, photorealistic, 3d",
         "steps": 20,
         "seed": -1,
         "sampler_name": "DPM++ 2M Karras",
@@ -32,7 +32,6 @@ module.exports = {
         "cfg_scale": 8,
         "save_images": true,
         "override_settings": {
-          "sd_model_checkpoint": "AOM3_orangemixs.safetensors [d124fc18f0]",
           "CLIP_stop_at_last_layers": 2
         },
       })
@@ -43,8 +42,9 @@ module.exports = {
       const base64str = object.images[0];
   
       fs.promises.writeFile("out.png", base64str, {encoding: "base64"});
+      const file = new Discord.MessageAttachment("out.png");
 
-      interaction.editReply("生成完了！\n" + interaction.options.getString("prompt"));
+      interaction.files.push(file);
     });
   }
 }
