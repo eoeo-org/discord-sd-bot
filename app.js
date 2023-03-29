@@ -36,6 +36,17 @@ client.once("ready", async () => {
   const data = [{
     name: "generate",
     description: "Generate a Image.",
+    options: [{
+      type: "STRING",
+      name: "Model",
+      description: "Select a Model.",
+      required: true,
+      choices: [
+        {name: "Anything V4.5", value: "anythingv45"},
+        {name: "PastelMix", value: "pastelmix"},
+        {name: "AbyssOrangeMix3", value:"aom3"}
+      ]
+    }]
   }]
   await client.application.commands.set(data, config.serverid);
   console.log("im ready!")
