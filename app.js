@@ -30,10 +30,25 @@ const client = new Client({
 });
 const config = require("./config.json");
 
-client.on("ready", () => {
-  console.log("ready set go!");
+// 起動 and コマンド登録
+
+client.once("ready", async () => {
+  const data = [{
+    name: "generate",
+    description: "Generate a Image.",
+  }]
+  await client.application.commands.set(data, config.serverid);
+  console.log("im ready!")
 })
 
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isCommand()) {
+    return;
+  }
 
+  if (interaction.commandName === "generate") {
+    await interaction.reply("test!");
+  }
+});
 
 client.login(config.token);
