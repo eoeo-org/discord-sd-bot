@@ -34,14 +34,30 @@ module.exports = {
         { name: "MeinaMix v8",     value: config.m_mmv8 },
         { name: "PastelMix",       value: config.m_ppm  }
       ]
+    },
+    {
+      type: 3,
+      name: "resolution",
+      description: "生成する画像の解像度を選択します。",
+      required: true,
+      choices: [
+        { name: "Standard", value: "512x512" },
+        { name: "Portrait", value: "512x768" },
+        { name: "Landscape", value: "768x512" }
+      ]
     }]
   },
   async execute(interaction) {
-    await interaction.reply("生成開始！\nPrompt: ```" + 
-    interaction.options.getString("prompt") + "\n" + 
+    await interaction.reply("生成開始！\n```" + 
+    "Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
     "Negative: " + interaction.options.getString("negative_prompt") + "\n" +
     "Model: " + interaction.options.getString("models") + "\n" +
+    "Resolution: " + interaction.options.getString("resolution") + "\n" +
     "```");
+
+    const res = interaction.options.getString("resolution");
+    const res_width = res.substring(0, 3);
+    const res_height = res.substring(4, 7);
 
     webclient.post({
       url: "http://127.0.0.1:7861/sdapi/v1/txt2img",
@@ -55,8 +71,8 @@ module.exports = {
         "seed": -1,
         "sampler_name": "DPM++ 2M Karras",
         "sampler_index": "DPM++ 2M Karras",
-        "width": 512,
-        "height": 512,
+        "width": res_width,
+        "height": res_height,
         "eta": 31337,
         "cfg_scale": 8,
         "save_images": true,
@@ -72,7 +88,12 @@ module.exports = {
       const base64str = object.images[0];
   
       fs.promises.writeFile("out.png", base64str, {encoding: "base64"});
-      interaction.followUp({ content: '生成完了！', files: ['out.png']});
+      interaction.editReply({ content: "生成完了！\n```" + 
+      "Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
+      "Negative: " + interaction.options.getString("negative_prompt") + "\n" +
+      "Model: " + interaction.options.getString("models") + "\n" +
+      "Resolution: " + interaction.options.getString("resolution") + "\n" +
+      "```", files: ['out.png']});
     });
   }
 }
