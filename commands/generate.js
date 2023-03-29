@@ -18,8 +18,11 @@ module.exports = {
       description: "生成に使用するNegative Promptを入力します。",
       required: true,
       choices: [
-        { name: "General", value: "(worst quality, low quality:1.4), photorealistic, 3d" },
-        { name: "for Meina Series", value: "(worst quality, low quality:1.4), monochrome, zombie, extra limbs," }
+        { name: "AbyssOrangeMix (Simple)",   value: "(worst quality, low quality:1.4), photorealistic, 3d" },
+        { name: "AbyssOrangeMix (Expert)",   value: "aomexp" },
+        { name: "Anything",                  value: "lqba" },
+        { name: "AnyPastel / PastelMix",     value: "pastel" },
+        { name: "Meina Series",          value: "(worst quality, low quality:1.4), monochrome, zombie, extra limbs," }
       ]
     },
     {
@@ -32,6 +35,7 @@ module.exports = {
         { name: "AnyPastel",       value: config.m_anyp },
         { name: "AbyssOrangeMix3", value: config.m_aom3 },
         { name: "MeinaMix v8",     value: config.m_mmv8 },
+        { name: "MeinaHentai",     value: config.m_mh   },
         { name: "PastelMix",       value: config.m_ppm  }
       ]
     },
@@ -47,17 +51,29 @@ module.exports = {
       ]
     }]
   },
+
   async execute(interaction) {
-    await interaction.reply("生成開始！\n```" + 
-    "Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
-    "Negative: " + interaction.options.getString("negative_prompt") + "\n" +
-    "Model: " + interaction.options.getString("models") + "\n" +
-    "Resolution: " + interaction.options.getString("resolution") + "\n" +
-    "```");
+
+    if(interaction.options.getString("negative_prompt") === "lqba") { // Low Quality, Bad Anatomy (NovelAI, Anything Series)
+      NegativePrompt = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, ";
+    } else if(interaction.options.getString("negative_prompt") === "aomexp") { // AbyssOrangeMix v2
+      NegativePrompt = "(worst quality, low quality:1.4), (lip, nose, tooth, rouge, lipstick, eyeshadow:1.4), (blush:1.2), (jpeg artifacts:1.4), (depth of field, bokeh, blurry, film grain, chromatic aberration, lens flare:1.0), (1boy, abs, muscular, rib:1.0), greyscale, monochrome, dusty sunbeams, trembling, motion lines, motion blur, emphasis lines, text, title, logo, signature, ";
+    } else if(interaction.options.getString("negative_prompt") === "pastel") { // PastelMix, and AnyPastel
+      NegativePrompt = "lowres, ((bad anatomy)), ((bad hands)), text, missing finger, extra digits, fewer digits, blurry, ((mutated hands and fingers)), (poorly drawn face), ((mutation)), ((deformed face)), (ugly), ((bad proportions)), ((extra limbs)), extra face, (double head), (extra head), ((extra feet)), monster, logo, cropped, worst quality, low quality, normal quality, jpeg, humpbacked, long body, long neck, ((jpeg artifacts)), "
+    } else {
+      NegativePrompt = interaction.options.getString("negative_prompt");
+    }
 
     const res = interaction.options.getString("resolution");
     const res_width = res.substring(0, 3);
     const res_height = res.substring(4, 7);
+
+    await interaction.reply("生成開始！\n```" + 
+    "Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
+    "Negative: " + NegativePrompt + "\n" +
+    "Model: " + interaction.options.getString("models") + "\n" +
+    "Resolution: " + interaction.options.getString("resolution") + "\n" +
+    "```");
 
     webclient.post({
       url: "http://127.0.0.1:7861/sdapi/v1/txt2img",
@@ -66,7 +82,7 @@ module.exports = {
       },
       body: JSON.stringify({
         "prompt": "masterpiece, best quality, "+ interaction.options.getString('prompt'),
-        "negative_prompt": interaction.options.getString('negative_prompt'),
+        "negative_prompt": NegativePrompt,
         "steps": 20,
         "seed": -1,
         "sampler_name": "DPM++ 2M Karras",
@@ -81,19 +97,19 @@ module.exports = {
           "CLIP_stop_at_last_layers": 2
         },
       })
-    }, function (error, response, body){
+    },function (body){
 
       const json = body;
       const object = JSON.parse(json);
       const base64str = object.images[0];
   
-      fs.promises.writeFile("out.png", base64str, {encoding: "base64"});
+      fs.promises.writeFile("SPOILER_out.png", base64str, {encoding: "base64"});
       interaction.editReply({ content: "生成完了！\n```" + 
       "Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
       "Negative: " + interaction.options.getString("negative_prompt") + "\n" +
       "Model: " + interaction.options.getString("models") + "\n" +
       "Resolution: " + interaction.options.getString("resolution") + "\n" +
-      "```", files: ['out.png']});
+      "```", files: ['SPOILER_out.png']});
     });
   }
 }
