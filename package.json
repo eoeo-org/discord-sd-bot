@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/Assault1892/sd-discord-bot/issues"
   },
-  "homepage": "https://github.com/Assault1892/sd-discord-bot#readme"
+  "homepage": "https://github.com/Assault1892/sd-discord-bot#readme",
+  "dependencies": {
+    "discord.js": "^14.8.0"
+  }
 }
