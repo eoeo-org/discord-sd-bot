@@ -31,12 +31,12 @@ module.exports = {
       description: "生成に使用するモデルを選択します。",
       required: true,
       choices: [
-        { name: "Anything v4.5",   value: config.m_anyv4 },
-        { name: "AnyPastel",       value: config.m_anyp },
-        { name: "AbyssOrangeMix3", value: config.m_aom3 },
-        { name: "MeinaMix v8",     value: config.m_mmv8 },
-        { name: "MeinaHentai",     value: config.m_mh   },
-        { name: "PastelMix",       value: config.m_ppm  }
+        { name: "Anything v4.5",      value: config.m_anyv4 },
+        { name: "AnyPastel",          value: config.m_anyp },
+        { name: "AbyssOrangeMix3 A1", value: config.m_aom3a1 },
+        { name: "MeinaMix v8",        value: config.m_mmv8 },
+        { name: "MeinaHentai",        value: config.m_mh   },
+        { name: "PastelMix",          value: config.m_ppm  }
       ]
     },
     {
