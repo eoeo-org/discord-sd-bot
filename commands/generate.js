@@ -97,7 +97,7 @@ module.exports = {
           "CLIP_stop_at_last_layers": 2
         },
       })
-    },function (body){
+    },function (error, response, body){
 
       const json = body;
       const object = JSON.parse(json);
