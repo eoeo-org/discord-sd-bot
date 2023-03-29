@@ -28,37 +28,42 @@ const client = new Client({
 		Partials.ThreadMember,
 	],
 });
+const fs = require("fs");
 const config = require("./config.json");
+
+const commands = {}
+const commandFiles = fs.readdirSync("./commands/").filter(file => file.endsWith(".js"));
 
 // 起動 and コマンド登録
 
+for (const file of commandFiles) {
+  const command = require(`./commands/${file}`);
+  commands[command.data.name] = command;
+}
+
 client.once("ready", async () => {
-  const data = [{
-    name: "generate",
-    description: "Generate a Image.",
-    options: [{
-      type: "STRING",
-      name: "Model",
-      description: "Select a Model.",
-      required: true,
-      choices: [
-        {name: "Anything V4.5", value: "anythingv45"},
-        {name: "PastelMix", value: "pastelmix"},
-        {name: "AbyssOrangeMix3", value:"aom3"}
-      ]
-    }]
-  }]
+  const data = []
+  for (const commandName in commands) {
+    data.push(commands[commandName].data)
+  }
   await client.application.commands.set(data, config.serverid);
   console.log("im ready!")
 })
 
-client.on("interactionCreate", async (interaction) => {
+client.on("interactionCreate", async interaction => {
   if (!interaction.isCommand()) {
     return;
   }
 
-  if (interaction.commandName === "generate") {
-    await interaction.reply("test!");
+  const command = commands[interaction.commandName];
+  try {
+    await command.execute(interaction);
+  } catch (error) {
+    console.error(error);
+    await interaction.reply({
+      content: "コマンドの実行中にエラーが発生しました。",
+      ephemeral: true,
+    })
   }
 });
 
