@@ -69,8 +69,8 @@ module.exports = {
     const res_height = res.substring(4, 7);
 
     await interaction.reply("生成開始！\n```" + 
-    "Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
-    "Negative: " + NegativePrompt + "\n" +
+    "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
+    "Negative Prompt: " + NegativePrompt + "\n" +
     "Model: " + interaction.options.getString("models") + "\n" +
     "Resolution: " + interaction.options.getString("resolution") + "\n" +
     "```");
@@ -105,8 +105,8 @@ module.exports = {
   
       fs.promises.writeFile("SPOILER_out.png", base64str, {encoding: "base64"});
       interaction.editReply({ content: "生成完了！\n```" + 
-      "Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
-      "Negative: " + NegativePrompt + "\n" +
+      "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
+      "Negative Prompt: " + NegativePrompt + "\n" +
       "Model: " + interaction.options.getString("models") + "\n" +
       "Resolution: " + interaction.options.getString("resolution") + "\n" +
       "```", files: ['SPOILER_out.png']});
