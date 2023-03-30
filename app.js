@@ -46,8 +46,9 @@ client.once("ready", async () => {
   for (const commandName in commands) {
     data.push(commands[commandName].data)
   }
-  await client.application.commands.set(data, config.serverid);
-  console.log("im ready!")
+//  await client.application.commands.set(data, config.serverid);
+	await client.application.commands.set(data);
+console.log("im ready!")
 })
 
 client.on("interactionCreate", async interaction => {
