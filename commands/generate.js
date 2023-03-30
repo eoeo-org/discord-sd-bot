@@ -20,7 +20,7 @@ module.exports = {
       choices: [
         { name: "AbyssOrangeMix (Simple)",   value: "(worst quality, low quality:1.4), photorealistic, 3d" },
         { name: "AbyssOrangeMix (Expert)",   value: "aomexp" },
-        { name: "Anything",                  value: "lqba" },
+        { name: "Anything v4.5 / v5",                  value: "lqba" },
         { name: "AnyPastel / PastelMix",     value: "pastel" },
         { name: "Meina Series",          value: "(worst quality, low quality:1.4), monochrome, zombie, extra limbs," }
       ]
@@ -33,7 +33,12 @@ module.exports = {
       choices: [
         { name: "Anything v4.5",      value: config.m_anyv4 },
         { name: "AnyPastel",          value: config.m_anyp },
+        { name: "AbyssOrangeMix3",    value: config.m_aom3 },
         { name: "AbyssOrangeMix3 A1", value: config.m_aom3a1 },
+        { name: "AbyssOrangeMix3 A1B",value: config.m_aom3a1b },
+        { name: "AbyssOrangeMix3 A2", value: config.m_aom3a2 },
+        { name: "AbyssOrangeMix3 A3", value: config.m_aom3a3 },
+        { name: "Counterfeit v2.5",   value: config.m_cf25 },
         { name: "MeinaMix v8",        value: config.m_mmv8 },
         { name: "MeinaHentai",        value: config.m_mh   },
         { name: "PastelMix",          value: config.m_ppm  }
