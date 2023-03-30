@@ -20,7 +20,7 @@ module.exports = {
       choices: [
         { name: "AbyssOrangeMix Series (Simple)",   value: "(worst quality, low quality:1.4), photorealistic, 3d" },
         { name: "AbyssOrangeMix Series (Expert)",   value: "aomexp" },
-        { name: "Anything v4.5 / v5",               value: "lqba" },
+        { name: "Anything v4.5 / v5 / NovelAI",               value: "lqba" },
         { name: "AnyPastel / PastelMix",            value: "pastel" },
         { name: "Meina Series",                     value: "(worst quality, low quality:1.4), monochrome, zombie, extra limbs," }
       ]
@@ -32,6 +32,7 @@ module.exports = {
       required: true,
       choices: [
         { name: "Anything v4.5",      value: config.m_anyv4 },
+        { name: "Anything v5",        value: config.m_anyv5 },
         { name: "AnyPastel",          value: config.m_anyp },
         { name: "AbyssOrangeMix3",    value: config.m_aom3 },
         { name: "AbyssOrangeMix3 A1", value: config.m_aom3a1 },
