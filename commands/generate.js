@@ -71,7 +71,7 @@ module.exports = {
       NegativePrompt = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, ";
     } else if(interaction.options.getString("negative_prompt") === "aomexp") { // AbyssOrangeMix v2
       NegativePrompt = "(worst quality, low quality:1.4), (lip, nose, tooth, rouge, lipstick, eyeshadow:1.4), (blush:1.2), (jpeg artifacts:1.4), (depth of field, bokeh, blurry, film grain, chromatic aberration, lens flare:1.0), (1boy, abs, muscular, rib:1.0), greyscale, monochrome, dusty sunbeams, trembling, motion lines, motion blur, emphasis lines, text, title, logo, signature, ";
-    } else if(interaction.options.getString("negative_prompt") === "pastel") { // PastelMix, and AnyPastel
+    } else if(interaction.options.getString("negative_prompt") === "pastel") { // PastelMix, AnyPastel
       NegativePrompt = "lowres, ((bad anatomy)), ((bad hands)), text, missing finger, extra digits, fewer digits, blurry, ((mutated hands and fingers)), (poorly drawn face), ((mutation)), ((deformed face)), (ugly), ((bad proportions)), ((extra limbs)), extra face, (double head), (extra head), ((extra feet)), monster, logo, cropped, worst quality, low quality, normal quality, jpeg, humpbacked, long body, long neck, ((jpeg artifacts)), "
     } else {
       NegativePrompt = interaction.options.getString("negative_prompt");
