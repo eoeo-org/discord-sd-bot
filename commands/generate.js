@@ -62,7 +62,6 @@ module.exports = {
       "type": 4,
       "name": "seed",
       "description": "生成に使用するシードを入力します。",
-      "required": true
     }]
   },
 
@@ -115,24 +114,30 @@ module.exports = {
         "save_images": true,
         "override_settings": {
           "sd_model_checkpoint": interaction.options.getString("models"),
-          "samples_filename_pattern": "SPOILER_out",
-          "outdir_txt2img_samples": "C:/Users/Assault/Desktop/PrivateFolder/Workspace/Git/sd-discord-bot",
           "CLIP_stop_at_last_layers": 2
         },
       })
     },function (error, response, body){
 
-//      const json = body;
-//      const object = JSON.parse(json);
-//      const base64str = object.images[0];  
-//      fs.promises.writeFile("SPOILER_out.png", base64str, {encoding: "base64"});
+      const json = body;
+      const obj = JSON.parse(json);
+      const base64image = obj.images[0];
+      const decodedimage = Buffer.from(base64image, "base64");
 
-      interaction.editReply({ content: "生成完了！\n```" + 
-      "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
-      "Negative Prompt: " + NegativePrompt + "\n" +
-      "Model: " + interaction.options.getString("models") + "\n" +
-      "Resolution: " + interaction.options.getString("resolution") + "\n" +
-      "```", files: ['SPOILER_out.png']});
+      const outFilename = "SPOILER_out.png";
+      fs.writeFile(outFilename, decodedimage, function(err) {
+        if (err) {
+          console.error(err);
+          interaction.editReply({ content:"生成に失敗しました...\n```" + err + "```" });
+        } else {
+          interaction.editReply({ content: "生成完了！\n```" + 
+          "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
+          "Negative Prompt: " + NegativePrompt + "\n" +
+          "Model: " + interaction.options.getString("models") + "\n" +
+          "Resolution: " + interaction.options.getString("resolution") + "\n" +
+          "```", files: ['SPOILER_out.png']});
+        }
+      });
     });
   }
 }
