@@ -59,7 +59,7 @@ module.exports = {
       ]
     },
     {
-      "type": 3,
+      "type": 4,
       "name": "seed",
       "description": "生成に使用するシードを入力します。",
       "required": true
@@ -78,7 +78,7 @@ module.exports = {
       NegativePrompt = interaction.options.getString("negative_prompt");
     }
 
-    if(interaction.options.getString("seed") === null) {
+    if(interaction.options.getInteger("seed") === null) {
       Seed = -1;
     } else {
       Seed = interaction.options.getInteger("seed");
