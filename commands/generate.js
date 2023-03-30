@@ -39,6 +39,8 @@ module.exports = {
         { name: "AbyssOrangeMix3 A2", value: config.m_aom3a2 },
         { name: "AbyssOrangeMix3 A3", value: config.m_aom3a3 },
         { name: "Counterfeit v2.5",   value: config.m_cf25 },
+        { name: "NovelAI (Full)",     value: config.m_nai },
+        { name: "NovelAI (Curated)",  value: config.m_nai_sfw },
         { name: "MeinaMix v8",        value: config.m_mmv8 },
         { name: "MeinaHentai",        value: config.m_mh   },
         { name: "PastelMix",          value: config.m_ppm  }
