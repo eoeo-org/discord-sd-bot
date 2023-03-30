@@ -46,7 +46,7 @@ client.once("ready", async () => {
   for (const commandName in commands) {
     data.push(commands[commandName].data)
   }
-  await client.application.commands.set(data, config.gkrk_serverid);
+  await client.application.commands.set(data, config.abyss_serverid);
 console.log("im ready!")
 })
 
@@ -61,8 +61,7 @@ client.on("interactionCreate", async interaction => {
   } catch (error) {
     console.error(error);
     await interaction.reply({
-      content: "コマンドの実行中にエラーが発生しました。",
-      ephemeral: true,
+      content: "コマンドの実行中にエラーが発生しました。"
     })
   }
 });

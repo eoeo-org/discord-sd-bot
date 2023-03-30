@@ -4,59 +4,65 @@ const config = require("./../config.json");
 
 module.exports = {
   data: {
-    name: "generate",
-    description: "画像を生成します。",
-    options: [{
-      type: 3,
-      name: "prompt",
-      description: "生成に使用するPromptを入力します。",
-      required: true,
+    "name": "generate",
+    "description": "画像を生成します。",
+    "options": [{
+      "type": 3,
+      "name": "prompt",
+      "description": "生成に使用するPromptを入力します。",
+      "required": true,
     },
     {
-      type: 3,
-      name: "negative_prompt",
-      description: "生成に使用するNegative Promptを入力します。",
-      required: true,
-      choices: [
-        { name: "AbyssOrangeMix Series (Simple)",   value: "(worst quality, low quality:1.4), photorealistic, 3d" },
-        { name: "AbyssOrangeMix Series (Expert)",   value: "aomexp" },
-        { name: "Anything v4.5 / v5 / NovelAI",               value: "lqba" },
-        { name: "AnyPastel / PastelMix",            value: "pastel" },
-        { name: "Meina Series",                     value: "(worst quality, low quality:1.4), monochrome, zombie, extra limbs," }
+      "type": 3,
+      "name": "negative_prompt",
+      "description": "生成に使用するNegative Promptを入力します。",
+      "required": true,
+      "choices": [
+        { "name": "AbyssOrangeMix Series (Simple)",   "value": "(worst quality, low quality:1.4), photorealistic, 3d" },
+        { "name": "AbyssOrangeMix Series (Expert)",   "value": "aomexp" },
+        { "name": "Anything v4.5 / v5 / NovelAI",     "value": "lqba" },
+        { "name": "AnyPastel / PastelMix",            "value": "pastel" },
+        { "name": "Meina Series",                     "value": "(worst quality, low quality:1.4), monochrome, zombie, extra limbs," }
       ]
     },
     {
       type: 3,
-      name: "models",
-      description: "生成に使用するモデルを選択します。",
+      "name": "models",
+      "description": "生成に使用するモデルを選択します。",
       required: true,
       choices: [
-        { name: "Anything v4.5",      value: config.m_anyv4 },
-        { name: "Anything v5",        value: config.m_anyv5 },
-        { name: "AnyPastel",          value: config.m_anyp },
-        { name: "AbyssOrangeMix3",    value: config.m_aom3 },
-        { name: "AbyssOrangeMix3 A1", value: config.m_aom3a1 },
-        { name: "AbyssOrangeMix3 A1B",value: config.m_aom3a1b },
-        { name: "AbyssOrangeMix3 A2", value: config.m_aom3a2 },
-        { name: "AbyssOrangeMix3 A3", value: config.m_aom3a3 },
-        { name: "Counterfeit v2.5",   value: config.m_cf25 },
-        { name: "NovelAI (Full)",     value: config.m_nai },
-        { name: "NovelAI (Curated)",  value: config.m_nai_sfw },
-        { name: "MeinaMix v8",        value: config.m_mmv8 },
-        { name: "MeinaHentai",        value: config.m_mh   },
-        { name: "PastelMix",          value: config.m_ppm  }
+        { "name": "Anything v4.5",       "value": config.m_anyv4 },
+        { "name": "Anything v5",         "value": config.m_anyv5 },
+        { "name": "AnyPastel",           "value": config.m_anyp },
+        { "name": "AbyssOrangeMix3",     "value": config.m_aom3 },
+        { "name": "AbyssOrangeMix3 A1",  "value": config.m_aom3a1 },
+        { "name": "AbyssOrangeMix3 A1B", "value": config.m_aom3a1b },
+        { "name": "AbyssOrangeMix3 A2",  "value": config.m_aom3a2 },
+        { "name": "AbyssOrangeMix3 A3",  "value": config.m_aom3a3 },
+        { "name": "Counterfeit v2.5",    "value": config.m_cf25 },
+        { "name": "NovelAI (Full)",      "value": config.m_nai },
+        { "name": "NovelAI (Curated)",   "value": config.m_nai_sfw },
+        { "name": "MeinaMix v8",         "value": config.m_mmv8 },
+        { "name": "MeinaHentai",         "value": config.m_mh   },
+        { "name": "PastelMix",           "value": config.m_ppm  }
       ]
     },
     {
-      type: 3,
-      name: "resolution",
-      description: "生成する画像の解像度を選択します。",
-      required: true,
-      choices: [
-        { name: "Standard", value: "512x512" },
-        { name: "Portrait", value: "512x768" },
-        { name: "Landscape", value: "768x512" }
+      "type": 3,
+      "name": "resolution",
+      "description": "生成する画像の解像度を選択します。",
+      "required": true,
+      "choices": [
+        { "name": "Standard", "value": "512x512" },
+        { "name": "Portrait", "value": "512x768" },
+        { "name": "Landscape", "value": "768x512" }
       ]
+    },
+    {
+      "type": 3,
+      "name": "seed",
+      "description": "生成に使用するシードを入力します。",
+      "required": true
     }]
   },
 
@@ -72,6 +78,12 @@ module.exports = {
       NegativePrompt = interaction.options.getString("negative_prompt");
     }
 
+    if(interaction.options.getString("seed") === null) {
+      Seed = -1;
+    } else {
+      Seed = interaction.options.getInteger("seed");
+    }
+
     const res = interaction.options.getString("resolution");
     const res_width = res.substring(0, 3);
     const res_height = res.substring(4, 7);
@@ -80,6 +92,7 @@ module.exports = {
     "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
     "Negative Prompt: " + NegativePrompt + "\n" +
     "Model: " + interaction.options.getString("models") + "\n" +
+    "Seed: " + Seed + "\n" +
     "Resolution: " + interaction.options.getString("resolution") + "\n" +
     "```");
 
@@ -92,7 +105,7 @@ module.exports = {
         "prompt": "masterpiece, best quality, "+ interaction.options.getString('prompt'),
         "negative_prompt": NegativePrompt,
         "steps": 20,
-        "seed": -1,
+        "seed": Seed,
         "sampler_name": "DPM++ 2M Karras",
         "sampler_index": "DPM++ 2M Karras",
         "width": res_width,
@@ -102,16 +115,18 @@ module.exports = {
         "save_images": true,
         "override_settings": {
           "sd_model_checkpoint": interaction.options.getString("models"),
+          "samples_filename_pattern": "SPOILER_out",
+          "outdir_txt2img_samples": "C:/Users/Assault/Desktop/PrivateFolder/Workspace/Git/sd-discord-bot",
           "CLIP_stop_at_last_layers": 2
         },
       })
     },function (error, response, body){
 
-      const json = body;
-      const object = JSON.parse(json);
-      const base64str = object.images[0];
-  
-      fs.promises.writeFile("SPOILER_out.png", base64str, {encoding: "base64"});
+//      const json = body;
+//      const object = JSON.parse(json);
+//      const base64str = object.images[0];  
+//      fs.promises.writeFile("SPOILER_out.png", base64str, {encoding: "base64"});
+
       interaction.editReply({ content: "生成完了！\n```" + 
       "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
       "Negative Prompt: " + NegativePrompt + "\n" +
