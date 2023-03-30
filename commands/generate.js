@@ -59,6 +59,19 @@ module.exports = {
       ]
     },
     {
+      "type": 3,
+      "name": "sampler",
+      "description": "生成に使用するサンプラーを選択します。",
+      "required": true,
+      "choices": [
+        { "name": "Euler a",          "value": "Euler a"          }, // k_euler_a
+        { "name": "Euler",            "value": "Euler"            }, // k_euler
+        { "name": "DPM Fast",         "value": "DPM Fast"         }, // k_dpm_fast
+        { "name": "DPM++ 2M Karras",  "value": "DPM++ 2M Karras"  }, // k_dpmpp_2m_ka
+        { "name": "DPM++ SDE Karras", "value": "DPM++ SDE Karras" }  // k_dpmpp_sde_ka
+      ]
+    },
+    {
       "type": 4,
       "name": "seed",
       "description": "生成に使用するシードを入力します。",
@@ -109,12 +122,15 @@ module.exports = {
     const res_width = res.substring(0, 3);
     const res_height = res.substring(4, 7);
 
+    const sampler = interaction.options.getString("sampler");
+
     await interaction.reply("生成開始！\n```" + 
     "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
     "Negative Prompt: " + NegativePrompt + "\n" +
     "Model: " + interaction.options.getString("models") + "\n" +
     "Seed: " + Seed + "\n" +
     "Steps: " + Steps + "\n" +
+    "Sampler: " + sampler + "\n" +
     "CFG Scale: " + CFGScale + "\n" +
     "Resolution: " + interaction.options.getString("resolution") + "\n" +
     "```");
@@ -129,8 +145,8 @@ module.exports = {
         "negative_prompt": NegativePrompt,
         "steps": Steps,
         "seed": Seed,
-        "sampler_name": "DPM++ 2M Karras",
-        "sampler_index": "DPM++ 2M Karras",
+        "sampler_name": sampler,
+        "sampler_index": sampler,
         "width": res_width,
         "height": res_height,
         "eta": 31337,
@@ -160,6 +176,7 @@ module.exports = {
           "Model: " + interaction.options.getString("models") + "\n" +
           "Seed: " + Seed + "\n" +
           "Steps: " + Steps + "\n" +
+          "Sampler: " + sampler + "\n" +
           "CFG Scale: " + CFGScale + "\n" +
           "Resolution: " + interaction.options.getString("resolution") + "\n" +
           "```", files: ['SPOILER_out.png']});
