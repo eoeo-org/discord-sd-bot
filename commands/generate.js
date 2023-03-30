@@ -62,6 +62,16 @@ module.exports = {
       "type": 4,
       "name": "seed",
       "description": "生成に使用するシードを入力します。",
+    },
+    {
+      "type": 4,
+      "name": "steps",
+      "description": "生成に使用するステップ数を入力します。",
+    },
+    {
+      "type": 4,
+      "name": "cfgscale",
+      "description": "生成に使用するCFG Scaleを入力します。",
     }]
   },
 
@@ -83,6 +93,18 @@ module.exports = {
       Seed = interaction.options.getInteger("seed");
     }
 
+    if(interaction.options.getInteger("steps") === null) {
+      Steps = 20;
+    } else {
+      Steps = interaction.options.getInteger("steps");
+    }
+
+    if(interaction.options.getInteger("cfgscale") === null) {
+      CFGScale = 8;
+    } else {
+      CFGScale = interaction.options.getInteger("cfgscale");
+    }
+
     const res = interaction.options.getString("resolution");
     const res_width = res.substring(0, 3);
     const res_height = res.substring(4, 7);
@@ -92,6 +114,8 @@ module.exports = {
     "Negative Prompt: " + NegativePrompt + "\n" +
     "Model: " + interaction.options.getString("models") + "\n" +
     "Seed: " + Seed + "\n" +
+    "Steps: " + Steps + "\n" +
+    "CFG Scale: " + CFGScale + "\n" +
     "Resolution: " + interaction.options.getString("resolution") + "\n" +
     "```");
 
@@ -103,14 +127,14 @@ module.exports = {
       body: JSON.stringify({
         "prompt": "masterpiece, best quality, "+ interaction.options.getString('prompt'),
         "negative_prompt": NegativePrompt,
-        "steps": 20,
+        "steps": Steps,
         "seed": Seed,
         "sampler_name": "DPM++ 2M Karras",
         "sampler_index": "DPM++ 2M Karras",
         "width": res_width,
         "height": res_height,
         "eta": 31337,
-        "cfg_scale": 8,
+        "cfg_scale": CFGScale,
         "save_images": true,
         "override_settings": {
           "sd_model_checkpoint": interaction.options.getString("models"),
@@ -134,6 +158,9 @@ module.exports = {
           "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
           "Negative Prompt: " + NegativePrompt + "\n" +
           "Model: " + interaction.options.getString("models") + "\n" +
+          "Seed: " + Seed + "\n" +
+          "Steps: " + Steps + "\n" +
+          "CFG Scale: " + CFGScale + "\n" +
           "Resolution: " + interaction.options.getString("resolution") + "\n" +
           "```", files: ['SPOILER_out.png']});
         }
