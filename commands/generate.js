@@ -66,7 +66,6 @@ module.exports = {
       "choices": [
         { "name": "Euler a",          "value": "Euler a"          }, // k_euler_a
         { "name": "Euler",            "value": "Euler"            }, // k_euler
-        { "name": "DPM Fast",         "value": "DPM Fast"         }, // k_dpm_fast
         { "name": "DPM++ 2M Karras",  "value": "DPM++ 2M Karras"  }, // k_dpmpp_2m_ka
         { "name": "DPM++ SDE Karras", "value": "DPM++ SDE Karras" }  // k_dpmpp_sde_ka
       ]
