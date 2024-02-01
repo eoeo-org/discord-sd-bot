@@ -16,53 +16,41 @@ module.exports = {
       "type": 3,
       "name": "negative_prompt",
       "description": "生成に使用するNegative Promptを入力します。",
-      "required": true,
-      "choices": [
-        { "name": "AbyssOrangeMix Series (Simple)",   "value": "(worst quality, low quality:1.4), photorealistic, 3d" },
-        { "name": "AbyssOrangeMix Series (Expert)",   "value": "aomexp" },
-        { "name": "Anything v4.5 / v5 / NovelAI",     "value": "lqba" },
-        { "name": "AnyPastel / PastelMix",            "value": "pastel" },
-        { "name": "Meina Series",                     "value": "(worst quality, low quality:1.4), monochrome, zombie, extra limbs," }
-      ]
     },
     {
-      type: 3,
+      "type": 5,
+      "name": "useen",
+      "description": "EasyNegativeを使用します。",
+    },
+    {
+      "type": 3,
       "name": "models",
       "description": "生成に使用するモデルを選択します。",
-      required: true,
       choices: [
-        { "name": "Anything v4.5",       "value": config.m_anyv4 },
         { "name": "Anything v5",         "value": config.m_anyv5 },
         { "name": "AnyPastel",           "value": config.m_anyp },
-        { "name": "AbyssOrangeMix3",     "value": config.m_aom3 },
-        { "name": "AbyssOrangeMix3 A1",  "value": config.m_aom3a1 },
-        { "name": "AbyssOrangeMix3 A1B", "value": config.m_aom3a1b },
-        { "name": "AbyssOrangeMix3 A2",  "value": config.m_aom3a2 },
-        { "name": "AbyssOrangeMix3 A3",  "value": config.m_aom3a3 },
-        { "name": "Counterfeit v2.5",    "value": config.m_cf25 },
-        { "name": "NovelAI (Full)",      "value": config.m_nai },
-        { "name": "NovelAI (Curated)",   "value": config.m_nai_sfw },
-        { "name": "MeinaMix v8",         "value": config.m_mmv8 },
-        { "name": "MeinaHentai",         "value": config.m_mh   },
-        { "name": "PastelMix",           "value": config.m_ppm  }
+        { "name": "BlueArchive ArtStyle", "value": config.m_barc },
+        { "name": "Hassaku v1.3",        "value": config.m_has },
+        { "name": "Sudachi v1.0",        "value": config.m_sud }
       ]
     },
     {
       "type": 3,
       "name": "resolution",
       "description": "生成する画像の解像度を選択します。",
-      "required": true,
       "choices": [
-        { "name": "Standard", "value": "512x512" },
-        { "name": "Portrait", "value": "512x768" },
-        { "name": "Landscape", "value": "768x512" }
+        { "name": "Standard (512x512)", "value": "512x512" },
+        { "name": "Portrait (512x768)", "value": "512x768" },
+        { "name": "Landscape (768x512)", "value": "768x512" },
+        // { "name": "HD Standard (1024x1024)", "value": "1024x1024"},
+        // { "name": "HD Portrait (1024x1536)", "value": "1024x1536" },
+        // { "name": "HD Landscape (1536x1024)", "value": "1536x1024" }
       ]
     },
     {
       "type": 3,
       "name": "sampler",
       "description": "生成に使用するサンプラーを選択します。",
-      "required": true,
       "choices": [
         { "name": "Euler a",          "value": "Euler a"          }, // k_euler_a
         { "name": "Euler",            "value": "Euler"            }, // k_euler
@@ -84,55 +72,90 @@ module.exports = {
       "type": 4,
       "name": "cfgscale",
       "description": "生成に使用するCFG Scaleを入力します。",
-    }]
+    },
+    {
+      "type": 5,
+      "name": "sus",
+      "description": "is this image is a sussy image?"
+    }
+  ]
   },
 
   async execute(interaction) {
 
-    if(interaction.options.getString("negative_prompt") === "lqba") { // Low Quality, Bad Anatomy (NovelAI, Anything Series)
-      NegativePrompt = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry, ";
-    } else if(interaction.options.getString("negative_prompt") === "aomexp") { // AbyssOrangeMix v2
-      NegativePrompt = "(worst quality, low quality:1.4), (lip, nose, tooth, rouge, lipstick, eyeshadow:1.4), (blush:1.2), (jpeg artifacts:1.4), (depth of field, bokeh, blurry, film grain, chromatic aberration, lens flare:1.0), (1boy, abs, muscular, rib:1.0), greyscale, monochrome, dusty sunbeams, trembling, motion lines, motion blur, emphasis lines, text, title, logo, signature, ";
-    } else if(interaction.options.getString("negative_prompt") === "pastel") { // PastelMix, AnyPastel
-      NegativePrompt = "lowres, ((bad anatomy)), ((bad hands)), text, missing finger, extra digits, fewer digits, blurry, ((mutated hands and fingers)), (poorly drawn face), ((mutation)), ((deformed face)), (ugly), ((bad proportions)), ((extra limbs)), extra face, (double head), (extra head), ((extra feet)), monster, logo, cropped, worst quality, low quality, normal quality, jpeg, humpbacked, long body, long neck, ((jpeg artifacts)), "
+    const Negative = "lowres, bad anatomy, bad hands, text, error, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, normal quality, jpeg artifacts, signature, watermark, username, blurry";
+    // Negative Prompt
+    if(interaction.options.getString("negative_prompt") === null) {
+      NegativePrompt = Negative;
     } else {
-      NegativePrompt = interaction.options.getString("negative_prompt");
+      NegativePrompt = `${Negative}` + `, ${interaction.options.getString("negative_prompt")}`;
     }
 
-    if(interaction.options.getInteger("seed") === null) {
+    // EasyNegative
+    if(interaction.options.getBoolean("useen") == true) {
+      NegativePrompt = NegativePrompt + ", <lora:EasyNegativeV2:1>"
+    } else {
+      ;
+    }
+
+    // Model
+    if(interaction.options.getString("models") == null) {
+      Model = config.m_anyv5;
+    } else {
+      Model = interaction.options.getString("models");
+    }
+
+    // Resolution
+    if(interaction.options.getString("resolution") == null) {
+      res_width = "512";
+      res_height = "512";
+    } else {
+      res = interaction.options.getString("resolution");
+      resparse = res.split("x");
+      res_width = resparse[0];
+      res_height = resparse[1];
+    }
+
+    // Sampler
+    if(interaction.options.getString("sampler") == null) {
+      sampler = "DPM++ 2M Karras";
+    } else {
+      sampler = interaction.options.getString("sampler");
+    };
+
+    // Seed
+    if(interaction.options.getInteger("seed") == null) {
       Seed = -1;
     } else {
       Seed = interaction.options.getInteger("seed");
     }
 
-    if(interaction.options.getInteger("steps") === null) {
+    // Steps
+    if(interaction.options.getInteger("steps") == null) {
       Steps = 20;
     } else {
       Steps = interaction.options.getInteger("steps");
     }
 
-    if(interaction.options.getInteger("cfgscale") === null) {
+    // CFG Scale
+    if(interaction.options.getInteger("cfgscale") == null) {
       CFGScale = 8;
     } else {
       CFGScale = interaction.options.getInteger("cfgscale");
     }
 
-    const res = interaction.options.getString("resolution");
-    const res_width = res.substring(0, 3);
-    const res_height = res.substring(4, 7);
+    await interaction.reply("生成開始！");
 
-    const sampler = interaction.options.getString("sampler");
-
-    await interaction.reply("生成開始！\n```" + 
-    "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
-    "Negative Prompt: " + NegativePrompt + "\n" +
-    "Model: " + interaction.options.getString("models") + "\n" +
-    "Seed: " + Seed + "\n" +
-    "Steps: " + Steps + "\n" +
-    "Sampler: " + sampler + "\n" +
-    "CFG Scale: " + CFGScale + "\n" +
-    "Resolution: " + interaction.options.getString("resolution") + "\n" +
-    "```");
+    // await interaction.reply("生成開始！\n```" + 
+    // "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
+    // "Negative Prompt: " + NegativePrompt + "\n" +
+    // "Model: " + Model + "\n" +
+    // "Seed: " + Seed + "\n" +
+    // "Steps: " + Steps + "\n" +
+    // "Sampler: " + sampler + "\n" +
+    // "CFG Scale: " + CFGScale + "\n" +
+    // "Resolution: " + interaction.options.getString("resolution") + "\n" +
+    // "```");
 
     webclient.post({
       url: "http://127.0.0.1:7861/sdapi/v1/txt2img",
@@ -145,7 +168,6 @@ module.exports = {
         "steps": Steps,
         "seed": Seed,
         "sampler_name": sampler,
-        "sampler_index": sampler,
         "width": res_width,
         "height": res_height,
         "eta": 31337,
@@ -158,29 +180,39 @@ module.exports = {
       })
     },function (error, response, body){
 
+      try {
       const json = body;
       const obj = JSON.parse(json);
       const base64image = obj.images[0];
       const decodedimage = Buffer.from(base64image, "base64");
 
-      const outFilename = "SPOILER_out.png";
+      if(interaction.options.getBoolean("sus") == true) {
+        outFilename = "SPOILER_out.png"; } else {
+        outFilename = "out.png"; 
+      }
+
       fs.writeFile(outFilename, decodedimage, function(err) {
         if (err) {
           console.error(err);
-          interaction.editReply({ content:"生成に失敗しました...\n```" + err + "```" });
+          interaction.editReply({ content:"https://c.tenor.com/iS8_wMys4GwAAAAC/tenor.gif\n```" + err + "```" });
         } else {
-          interaction.editReply({ content: "生成完了！\n```" + 
-          "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
-          "Negative Prompt: " + NegativePrompt + "\n" +
-          "Model: " + interaction.options.getString("models") + "\n" +
-          "Seed: " + Seed + "\n" +
-          "Steps: " + Steps + "\n" +
-          "Sampler: " + sampler + "\n" +
-          "CFG Scale: " + CFGScale + "\n" +
-          "Resolution: " + interaction.options.getString("resolution") + "\n" +
-          "```", files: ['SPOILER_out.png']});
+          interaction.editReply({ content: "生成完了！", files: [outFilename] });
+          // interaction.editReply({ content: "生成完了！\n```" + 
+          // "Positive Prompt: masterpiece, best quality, "+ interaction.options.getString("prompt") + "\n" + 
+          // "Negative Prompt: " + NegativePrompt + "\n" +
+          // "Model: " + interaction.options.getString("models") + "\n" +
+          // "Seed: " + Seed + "\n" +
+          // "Steps: " + Steps + "\n" +
+          // "Sampler: " + sampler + "\n" +
+          // "CFG Scale: " + CFGScale + "\n" +
+          // "Resolution: " + interaction.options.getString("resolution") + "\n" +
+          // "```", files: ['SPOILER_out.png']});
         }
-      });
+      }); } catch (error) {
+        console.error(error);
+        interaction.editReply({ content:"https://c.tenor.com/iS8_wMys4GwAAAAC/tenor.gif" });
+      }
+      
     });
   }
 }
