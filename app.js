@@ -37,33 +37,48 @@ const commandFiles = fs.readdirSync("./commands/").filter(file => file.endsWith(
 // 起動 and コマンド登録
 
 for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  commands[command.data.name] = command;
+	const command = require(`./commands/${file}`);
+	commands[command.data.name] = command;
 }
 
 client.once("ready", async () => {
-  const data = []
-  for (const commandName in commands) {
-    data.push(commands[commandName].data)
-  }
-  await client.application.commands.set(data);
+	const data = []
+	for (const commandName in commands) {
+		data.push(commands[commandName].data)
+	}
+	await client.application.commands.set(data);
 console.log("im ready!")
 })
 
 client.on("interactionCreate", async interaction => {
-  if (!interaction.isCommand()) {
-    return;
-  }
+	if (!interaction.isCommand()) {
+		return;
+	}
 
-  const command = commands[interaction.commandName];
-  try {
-    await command.execute(interaction);
-  } catch (error) {
-    console.error(error);
-    await interaction.reply({
-      content: "コマンドの実行中にエラーが発生しました。"
-    })
-  }
+	const command = commands[interaction.commandName];
+	try {
+		await command.execute(interaction);
+	} catch (error) {
+		console.error(error);
+		await interaction.reply({
+		content: "コマンドの実行中にエラーが発生しました。",
+		ephemeral: true
+		})
+	}
 });
+
+async function handle(signal) {
+	console.log(`Received ${signal}`)
+	await client.destroy()
+	process.exit()
+  }
+  
+  process.on('SIGINT', handle)
+  process.on('SIGTERM', handle)
+  process.on('uncaughtException', async (err) => {
+	await client.destroy()
+	console.error('uncaughtException:\n%o', err)
+	process.exit(1)
+  })
 
 client.login(config.token);
