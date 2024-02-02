@@ -1,3 +1,4 @@
 # Stable Diffusion Discord BOT
 
-Discord上で「Stable Diffusion WebUI」を扱うためのBOTです。<br>
+Discord上で「AUTOMATIC1111 Stable Diffusion WebUI」を操作するBotです。  
+WebUIを--nowebuiで起動している必要があります。
