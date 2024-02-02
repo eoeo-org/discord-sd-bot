@@ -28,11 +28,14 @@ module.exports = {
                       { "name": "Sudachi v1.0",        "value": config.m_sud }))
             .addStringOption(option =>
                     option.setName("resolution")
-                    .setDescription("生成する画像の解像度を選択してください。デフォルト: Standard")
+                    .setDescription("生成する画像の解像度を選択してください。HD解像度は高解像度ですが崩壊しやすくなります。デフォルト: Standard")
                     .addChoices(
                       { "name": "Standard (512x512)", "value": "512x512" },
                       { "name": "Portrait (512x768)", "value": "512x768" },
-                      { "name": "Landscape (768x512)", "value": "768x512" }))
+                      { "name": "Landscape (768x512)", "value": "768x512" },
+                      { "name": "HD Standard (1024x1024)", "value": "1024x1024"},
+                      { "name": "HD Portrait (1024x1536)", "value": "1024x1536" },
+                      { "name": "HD Landscape (1536x1024)", "value": "1536x1024"}))
             .addStringOption(option =>
                     option.setName("sampler")
                     .setDescription("使用するサンプラーを選択してください。デフォルト: DPM++ 2M Karras")
