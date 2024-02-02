@@ -75,8 +75,8 @@ module.exports = {
     },
     {
       "type": 5,
-      "name": "sus",
-      "description": "is this image is a sussy image?"
+      "name": "not_sus",
+      "description": "Sussyな画像 ではない ならTrueにしてください。",
     }
   ]
   },
@@ -92,7 +92,7 @@ module.exports = {
     }
 
     // EasyNegative
-    if(interaction.options.getBoolean("useen") == true) {
+    if(interaction.options.getBoolean("useen") == true || interaction.options.getBoolean("useen") == null){
       NegativePrompt = NegativePrompt + ", <lora:EasyNegativeV2:1>"
     } else {
       ;
@@ -186,9 +186,9 @@ module.exports = {
       const base64image = obj.images[0];
       const decodedimage = Buffer.from(base64image, "base64");
 
-      if(interaction.options.getBoolean("sus") == true) {
-        outFilename = "SPOILER_out.png"; } else {
-        outFilename = "out.png"; 
+      if(interaction.options.getBoolean("not_sus") == true) {
+        outFilename = "out.png"; } else {
+        outFilename = "SPOILER_out.png"; 
       }
 
       fs.writeFile(outFilename, decodedimage, function(err) {
