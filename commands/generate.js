@@ -1,85 +1,60 @@
 const webclient = require("request");
 const fs = require("fs");
-const config = require("./../config.json");
+const config = require("../config.json");
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
-  data: {
-    "name": "generate",
-    "description": "画像を生成します。",
-    "options": [{
-      "type": 3,
-      "name": "prompt",
-      "description": "生成に使用するPromptを入力します。",
-      "required": true,
-    },
-    {
-      "type": 3,
-      "name": "negative_prompt",
-      "description": "生成に使用するNegative Promptを入力します。",
-    },
-    {
-      "type": 5,
-      "name": "useen",
-      "description": "EasyNegativeを使用します。",
-    },
-    {
-      "type": 3,
-      "name": "models",
-      "description": "生成に使用するモデルを選択します。",
-      choices: [
-        { "name": "Anything v5",         "value": config.m_anyv5 },
-        { "name": "AnyPastel",           "value": config.m_anyp },
-        { "name": "BlueArchive ArtStyle", "value": config.m_barc },
-        { "name": "Hassaku v1.3",        "value": config.m_has },
-        { "name": "Sudachi v1.0",        "value": config.m_sud }
-      ]
-    },
-    {
-      "type": 3,
-      "name": "resolution",
-      "description": "生成する画像の解像度を選択します。",
-      "choices": [
-        { "name": "Standard (512x512)", "value": "512x512" },
-        { "name": "Portrait (512x768)", "value": "512x768" },
-        { "name": "Landscape (768x512)", "value": "768x512" },
-        // { "name": "HD Standard (1024x1024)", "value": "1024x1024"},
-        // { "name": "HD Portrait (1024x1536)", "value": "1024x1536" },
-        // { "name": "HD Landscape (1536x1024)", "value": "1536x1024" }
-      ]
-    },
-    {
-      "type": 3,
-      "name": "sampler",
-      "description": "生成に使用するサンプラーを選択します。",
-      "choices": [
-        { "name": "Euler a",          "value": "Euler a"          }, // k_euler_a
-        { "name": "Euler",            "value": "Euler"            }, // k_euler
-        { "name": "DPM++ 2M Karras",  "value": "DPM++ 2M Karras"  }, // k_dpmpp_2m_ka
-        { "name": "DPM++ SDE Karras", "value": "DPM++ SDE Karras" }  // k_dpmpp_sde_ka
-      ]
-    },
-    {
-      "type": 4,
-      "name": "seed",
-      "description": "生成に使用するシードを入力します。",
-    },
-    {
-      "type": 4,
-      "name": "steps",
-      "description": "生成に使用するステップ数を入力します。",
-    },
-    {
-      "type": 4,
-      "name": "cfgscale",
-      "description": "生成に使用するCFG Scaleを入力します。",
-    },
-    {
-      "type": 5,
-      "name": "not_sus",
-      "description": "Sussyな画像 ではない ならTrueにしてください。",
-    }
-  ]
-  },
+  data: new SlashCommandBuilder()
+            .setName("generate")
+            .setDescription("画像を生成します。")
+            .addStringOption(option =>
+                    option.setName("prompt")
+                    .setDescription("生成に使用するPromptを入力してください。デフォルト: masterpiece, best quality, <input>")
+                    .setRequired(true))
+            .addStringOption(option =>
+                    option.setName("negative_prompt")
+                    .setDescription("生成に使用するNegative Promptを入力してください。デフォルト: LQBA, <input>"))
+            .addBooleanOption(option =>
+                    option.setName("useen")
+                    .setDescription("EasyNegativeを使用しますか？デフォルト: True (NegativePrompt + EasyNegative)"))
+            .addStringOption(option =>
+                    option.setName("models")
+                    .setDescription("使用するモデルを入力してください。デフォルト: anyv5")
+                    .addChoices(
+                      { "name": "Anything v5",         "value": config.m_anyv5 },
+                      { "name": "AnyPastel",           "value": config.m_anyp },
+                      { "name": "BlueArchive ArtStyle", "value": config.m_barc },
+                      { "name": "Hassaku v1.3",        "value": config.m_has },
+                      { "name": "Sudachi v1.0",        "value": config.m_sud }))
+            .addStringOption(option =>
+                    option.setName("resolution")
+                    .setDescription("生成する画像の解像度を選択してください。デフォルト: Standard")
+                    .addChoices(
+                      { "name": "Standard (512x512)", "value": "512x512" },
+                      { "name": "Portrait (512x768)", "value": "512x768" },
+                      { "name": "Landscape (768x512)", "value": "768x512" }))
+            .addStringOption(option =>
+                    option.setName("sampler")
+                    .setDescription("使用するサンプラーを選択してください。デフォルト: DPM++ 2M Karras")
+                    .addChoices(
+                      { "name": "Euler a",          "value": "Euler a"          }, // k_euler_a
+                      { "name": "Euler",            "value": "Euler"            }, // k_euler
+                      { "name": "DPM++ 2M Karras",  "value": "DPM++ 2M Karras"  }, // k_dpmpp_2m_ka
+                      { "name": "DPM++ SDE Karras", "value": "DPM++ SDE Karras" }  // k_dpmpp_sde_ka
+                      ))
+            .addIntegerOption(option =>
+                    option.setName("seed")
+                    .setDescription("使用するシードを入力してください。デフォルト: -1 (ランダム)"))
+            .addIntegerOption(option =>
+                    option.setName("steps")
+                    .setDescription("生成するステップ数を入力してください。デフォルト: 20"))
+            .addIntegerOption(option =>
+                    option.setName("cfgscale")
+                    .setDescription("CFG Scaleを入力してください。デフォルト: 8"))
+            .addBooleanOption(option =>
+                    option.setName("not_sus")
+                    .setDescription("stop posting about among us!!! デフォルト: False")),
+
 
   async execute(interaction) {
 

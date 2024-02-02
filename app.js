@@ -28,25 +28,25 @@ const client = new Client({
 		Partials.ThreadMember,
 	],
 });
-const fs = require("fs");
+// const fs = require("fs");
 const config = require("./config.json");
 
-const commands = {}
-const commandFiles = fs.readdirSync("./commands/").filter(file => file.endsWith(".js"));
+// const commands = {}
+// const commandFiles = fs.readdirSync("./commands/").filter(file => file.endsWith(".js"));
 
-// 起動 and コマンド登録
+// // 起動 and コマンド登録
 
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-	commands[command.data.name] = command;
-}
+// for (const file of commandFiles) {
+// 	const command = require(`./commands/${file}`);
+// 	commands[command.data.name] = command;
+// }
 
 client.once("ready", async () => {
-	const data = []
-	for (const commandName in commands) {
-		data.push(commands[commandName].data)
-	}
-	await client.application.commands.set(data);
+	// const data = []
+	// for (const commandName in commands) {
+	// 	data.push(commands[commandName].data)
+	// }
+	// await client.application.commands.set(data);
 console.log("im ready!")
 })
 
