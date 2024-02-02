@@ -155,6 +155,11 @@ module.exports = {
           "sd_model_checkpoint": interaction.options.getString("models"),
           "CLIP_stop_at_last_layers": 2
         },
+        alwayson_scripts: {
+          "Tiled VAE": {
+            "args": ["True"]
+          }
+        }
       })
     },function (error, response, body){
 
